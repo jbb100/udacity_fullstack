@@ -41,12 +41,12 @@ def create_app(test_config=None):
     @cross_origin()
     def get_categories():
         categories = Category.query.all()
-        # formatted_categories = [category.format() for category in categories]
         formatted_categories = {}
         for category in categories:
             formatted_categories[category.id] = category.type
 
-        return jsonify({'categories': formatted_categories})
+        return jsonify({'categories': formatted_categories,
+                        'success': True})
 
     '''
     Create an endpoint to handle GET requests for questions,
@@ -75,7 +75,8 @@ def create_app(test_config=None):
         return jsonify({
             'questions': current_questions,
             'total_questions': len(formatted_questions),
-            'categories': categories
+            'categories': categories,
+            'success': True
         })
 
     '''
@@ -178,6 +179,15 @@ def create_app(test_config=None):
     @app.route('/categories/<category_id>/questions', methods=['GET'])
     @cross_origin()
     def get_category_question(category_id):
+        try:
+            category_id = int(category_id)
+            if category_id < 0:
+                # if category_id has negative number
+                abort(400)
+        except:
+            # if category_id has not integer value
+            abort(400)
+
         request_json = request.get_json()
         questions = Question.query.filter(
             Question.category == category_id).all()
@@ -230,7 +240,8 @@ def create_app(test_config=None):
             next_question = None
 
         return jsonify({
-            'question': next_question
+            'question': next_question,
+            'success': True
         })
 
     '''

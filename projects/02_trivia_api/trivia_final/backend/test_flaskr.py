@@ -43,7 +43,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertGreater(len(data['categories']), 0)
 
-        # failure
+    def test_error_get_categories(self):
+        # invalid method
         res = self.client().post('/categories')
         data = res.get_json()
         self.assertEqual(res.status_code, 405)
@@ -55,7 +56,8 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertGreater(data['total_questions'], 0)
 
-        # failure
+    def test_error_get_questions(self):
+        # invalid method
         res = self.client().put('/questions?page=1')
         data = res.get_json()
         self.assertEqual(res.status_code, 405)
@@ -63,15 +65,22 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_delete_questions(self):
         # success
-        res = self.client().delete('/questions/2')
+        res = self.client().delete('/questions/5')
         data = res.get_json()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-
-        # failure
+    
+    def test_error_delete_questions(self):
+        # invalid method
         res = self.client().put('/questions/1')
         data = res.get_json()
         self.assertEqual(res.status_code, 405)
+        self.assertEqual(data['success'], False)
+
+        # invalid request
+        res = self.client().delete('/questions/first')
+        data = res.get_json()
+        self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
 
     def test_create_questions(self):
@@ -87,8 +96,21 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-        # failure
+    def test_error_create_questions(self):
+        # invalid method
         res = self.client().delete('/questions/create')
+        data = res.get_json()
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)
+
+        # invalid request
+        request_json = {
+            'question': 'test_q',
+            'answer': 'test_a',
+            'category': 'cat_1', # wrong value
+            'difficulty': 'very hard' # wrong value
+        }
+        res = self.client().post('/questions/create', json=request_json)
         data = res.get_json()
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
@@ -103,9 +125,19 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-        # failure
+    def test_error_search_questions(self):
+        # invalid request
         request_json = {
-            'q': 'test_q'
+            'q': 'test_q' # wrong parameter
+        }
+        res = self.client().post('/questions')
+        data = res.get_json()
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)
+
+        # invalid request
+        request_json = {
+            'searchTerm': -1 # wrong data type for a value
         }
         res = self.client().post('/questions')
         data = res.get_json()
@@ -119,10 +151,17 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-        # failure
+    def test_error_get_category_question(self):
+        # invalid method
         res = self.client().post('/categories/1/questions')
         data = res.get_json()
         self.assertEqual(res.status_code, 405)
+        self.assertEqual(data['success'], False)
+
+        # invalid request
+        res = self.client().get('/categories/-100/questions')
+        data = res.get_json()
+        self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
 
     def test_quizzes(self):
@@ -136,10 +175,21 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
-        # failure
+    def test_error_quizzes(self):
+        # invalid method
         res = self.client().delete('/quizzes')
         data = res.get_json()
         self.assertEqual(res.status_code, 405)
+        self.assertEqual(data['success'], False)
+
+        # invalid request
+        request_json = {
+            'previous_questions': [],
+            'quiz_category': {'cat_id': 1, 'category': 'test'}
+        }
+        res = self.client().post('/quizzes', json=request_json)
+        data = res.get_json()
+        self.assertEqual(res.status_code, 400)
         self.assertEqual(data['success'], False)
 
 
