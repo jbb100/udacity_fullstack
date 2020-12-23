@@ -72,7 +72,7 @@ GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-```
+```javascript
 {'1' : "Science",
 '2' : "Art",
 '3' : "Geography",
@@ -85,7 +85,7 @@ GET '/questions'
 - Fetches a dictionary of questions
 - Request Arguments: page(int, query string)
 - Returns: An object with three keys, questions, total_questions, and categories.
-```
+```javascript
 {
   'success': True,
   'questions': [
@@ -120,7 +120,7 @@ DELETE '/questions/<question_id>'
 - Delete a question by id
 - Request Arguments: question_id(int, path variable)
 - Returns: 
-```
+```javascript
 {
   'question_id': 1, 
   'success': True
@@ -131,7 +131,7 @@ POST '/questions/create'
 - Create new question
 - Request Arguments: question(string, json_body), answer(string, json_body), category(string, json_body), difficulty(int, json_body)
 - Returns: 
-```
+```javascript
 {'success': True}
 ```
 
@@ -139,7 +139,7 @@ POST '/questions'
 - Search questions by a search term
 - Request Arguments: searchTerm(string, json_body)
 - Returns: 
-```
+```javascript
 {
   'questions': [
     {
@@ -181,7 +181,7 @@ GET '/categories/<category_id>/questions'
 - Get questions in a category
 - Request Arguments: category_id(int, path variable)
 - Returns: 
-```
+```javascript
 {
   'questions': [
     {
@@ -223,7 +223,7 @@ POST '/quizzes'
 - Get a question for a quizze game
 - Request Arguments: previous_questions(a list of question ids, json body), quiz_category(int, json body)
 - Returns: 
-```
+```javascript
 {
   'question': {
     'id': 20, 
@@ -246,6 +246,21 @@ Here is the error JSON payload:
   'message':"bad request"
 }
 ```
+
+#### 400 bad request
+ * types of request values is wrong or some mandatory fields are missing.
+
+#### 404 resource not found
+ * an url is wrong or there are no object to process in the database.
+ 
+#### 405 method not allowed
+ * access with wrong method. check your http method again.
+ 
+#### 422 unprocessable
+ * unable to process the request.
+ 
+#### 500 internal server error
+ * An unknown error occured while processing the request.
 
 ## Testing
 To run the tests, run
