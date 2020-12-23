@@ -87,6 +87,7 @@ GET '/questions'
 - Returns: An object with three keys, questions, total_questions, and categories.
 ```
 {
+  'success': True,
   'questions': [
      {
       'id': 5, 
@@ -120,7 +121,10 @@ DELETE '/questions/<question_id>'
 - Request Arguments: question_id(int, path variable)
 - Returns: 
 ```
-{'question_id': 1, 'success': True}
+{
+  'question_id': 1, 
+  'success': True
+}
 ```
 
 POST '/questions/create'
@@ -227,7 +231,8 @@ POST '/quizzes'
     'answer': 'The Liver', 
     'category': 1, 
     'difficulty': 4
-  }
+  },
+  'success': True
 }
 ```
 
