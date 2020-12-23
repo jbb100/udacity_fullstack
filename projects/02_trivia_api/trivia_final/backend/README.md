@@ -84,9 +84,11 @@ GET '/categories'
 GET '/questions'
 - Fetches a dictionary of questions
 - Request Arguments
+
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
 page | INT | NO | Query String (Default: 1)
+
 - Returns: An object with three keys, questions, total_questions, and categories.
 ```javascript
 {
