@@ -127,7 +127,7 @@ DELETE '/questions/<question_id>'
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
-question_id | INT | YES | path variable
+question_id | INT | YES | a question id to delete (path variable)
 
 - Returns: 
 ```javascript
@@ -139,7 +139,7 @@ question_id | INT | YES | path variable
 
 POST '/questions/create'
 - Create new question
-- Request Arguments: question(string, json_body), answer(string, json_body), category(string, json_body), difficulty(int, json_body)
+- Request Arguments
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
@@ -155,7 +155,7 @@ difficulty | INT | YES | difficulty of the question (json body)
 
 POST '/questions'
 - Search questions by a search term
-- Request Arguments: searchTerm(string, json_body)
+- Request Arguments
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
@@ -203,7 +203,7 @@ searchTerm | STRING | YES | term for search questions (json body)
 
 GET '/categories/<category_id>/questions'
 - Get questions in a category
-- Request Arguments: category_id(int, path variable)
+- Request Arguments
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
@@ -251,7 +251,7 @@ category_id | INT | YES | category id for filtering questions
 
 POST '/quizzes'
 - Get a question for a quizze game
-- Request Arguments: previous_questions(a list of question ids, json body), quiz_category(int, json body)
+- Request Arguments
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
