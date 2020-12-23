@@ -136,8 +136,41 @@ POST '/questions'
 - Request Arguments: searchTerm(string, json_body)
 - Returns: 
 ```
-{'questions': [
-  {'id': 9, 'question': "What boxer's original name is Cassius Clay?", 'answer': 'Muhammad Ali', 'category': 4, 'difficulty': 1}, {'id': 2, 'question': 'What movie earned Tom Hanks his third straight Oscar nomination, in 1996?', 'answer': 'Apollo 13', 'category': 5, 'difficulty': 4}, {'id': 4, 'question': 'What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?', 'answer': 'Tom Cruise', 'category': 5, 'difficulty': 4}, {'id': 6, 'question': 'What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?', 'answer': 'Edward Scissorhands', 'category': 5, 'difficulty': 3}, {'id': 13, 'question': 'What is the largest lake in Africa?', 'answer': 'Lake Victoria', 'category': 3, 'difficulty': 2}, {'id': 17, 'question': 'La Giaconda is better known as what?', 'answer': 'Mona Lisa', 'category': 2, 'difficulty': 3}, {'id': 20, 'question': 'What is the heaviest organ in the human body?', 'answer': 'The Liver', 'category': 1, 'difficulty': 4}, {'id': 22, 'question': 'Hematology is a branch of medicine involving the study of what?', 'answer': 'Blood', 'category': 1, 'difficulty': 4}], 'total_questions': 8, 'categories': {'1': 'Science', '2': 'Art', '3': 'Geography', '4': 'History', '5': 'Entertainment', '6': 'Sports'}, 'success': True}
+{
+  'questions': [
+    {
+      'id': 9, 
+      'question': "What boxer's original name is Cassius Clay?", 
+      'answer': 'Muhammad Ali', 
+      'category': 4, 
+      'difficulty': 1
+    }, 
+    {
+      'id': 2,
+      'question': 'What movie earned Tom Hanks his third straight Oscar nomination, in 1996?', 
+      'answer': 'Apollo 13', 
+      'category': 5, 
+      'difficulty': 4
+    },
+    {
+      'id': 4, 
+      'question': 'What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?', 
+      'answer': 'Tom Cruise', 
+      'category': 5, 
+      'difficulty': 4
+    }
+  ], 
+  'total_questions': 8, 
+  'categories': {
+    '1': 'Science', 
+    '2': 'Art', 
+    '3': 'Geography', 
+    '4': 'History', 
+    '5': 'Entertainment', 
+    '6': 'Sports'
+   }, 
+  'success': True
+}
 ```
 
 GET '/categories/<category_id>/questions'
@@ -145,7 +178,41 @@ GET '/categories/<category_id>/questions'
 - Request Arguments: category_id(int, path variable)
 - Returns: 
 ```
-{'questions': [{'id': 13, 'question': 'What is the largest lake in Africa?', 'answer': 'Lake Victoria', 'category': 3, 'difficulty': 2}, {'id': 14, 'question': 'In which royal palace would you find the Hall of Mirrors?', 'answer': 'The Palace of Versailles', 'category': 3, 'difficulty': 3}, {'id': 15, 'question': 'The Taj Mahal is located in which Indian city?', 'answer': 'Agra', 'category': 3, 'difficulty': 2}], 'total_questions': 3, 'categories': {'1': 'Science', '2': 'Art', '3': 'Geography', '4': 'History', '5': 'Entertainment', '6': 'Sports'}, 'success': True}
+{
+  'questions': [
+    {
+      'id': 13, 
+      'question': 'What is the largest lake in Africa?', 
+      'answer': 'Lake Victoria', 
+      'category': 3, 
+      'difficulty': 2
+    }, 
+    {
+      'id': 14, 
+      'question': 'In which royal palace would you find the Hall of Mirrors?', 
+      'answer': 'The Palace of Versailles', 
+      'category': 3, 
+      'difficulty': 3
+    },
+    {
+      'id': 15, 
+      'question': 'The Taj Mahal is located in which Indian city?', 
+      'answer': 'Agra', 
+      'category': 3, 
+      'difficulty': 2
+    }
+  ], 
+  'total_questions': 3, 
+  'categories': {
+    '1': 'Science', 
+    '2': 'Art', 
+    '3': 'Geography', 
+    '4': 'History', 
+    '5': 'Entertainment', 
+    '6': 'Sports'
+  }, 
+  'success': True
+}
 ```
 
 POST '/quizzes'
@@ -153,7 +220,15 @@ POST '/quizzes'
 - Request Arguments: previous_questions(a list of question ids, json body), quiz_category(int, json body)
 - Returns: 
 ```
-{'question': {'id': 20, 'question': 'What is the heaviest organ in the human body?', 'answer': 'The Liver', 'category': 1, 'difficulty': 4}}
+{
+  'question': {
+    'id': 20, 
+    'question': 'What is the heaviest organ in the human body?', 
+    'answer': 'The Liver', 
+    'category': 1, 
+    'difficulty': 4
+  }
+}
 ```
 
 ## Testing
