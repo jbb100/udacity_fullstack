@@ -236,6 +236,17 @@ POST '/quizzes'
 }
 ```
 
+## Error Codes
+Errors consist of three parts: a success flag, an error code and a message.
+Here is the error JSON payload:
+```javascript
+{
+  'success': False,
+  'error': 400,
+  'message':"bad request"
+}
+```
+
 ## Testing
 To run the tests, run
 ```
