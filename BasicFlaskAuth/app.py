@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 AUTH0_DOMAIN = 'dev-76d8bb3e.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'https://dev-76d8bb3e.us.auth0.com/api/v2/'
+API_AUDIENCE = 'coffee-shop'
 
 
 class AuthError(Exception):

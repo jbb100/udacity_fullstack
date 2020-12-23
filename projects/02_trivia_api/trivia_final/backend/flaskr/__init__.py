@@ -208,8 +208,19 @@ def create_app(test_config=None):
         previous_questions = set(request_json['previous_questions'])
         quiz_category = request_json['quiz_category']
 
-        questions = Question.query.filter(
-            Question.category == quiz_category['id']).all()
+        try:
+            # convert str to int to avoid the wrong string input
+            quiz_category_id = int(quiz_category['id'])
+        except:
+            # wrong parameter
+            abort(400)
+
+        if quiz_category_id == 0:
+            # All
+            questions = Question.query.all()
+        else:
+            questions = Question.query.filter(
+                Question.category == quiz_category_id).all()
         formatted_questions = [question.format(
         ) for question in questions if question.id not in previous_questions]
 
