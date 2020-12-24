@@ -37,27 +37,31 @@ def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
     if not auth:
         raise AuthError({
-            'code': 'authorization_header_missing',
-            'description': 'Authorization header is expected.'
+            'success': False,
+            'error': 401,
+            'message': 'authorization_header_missing. Authorization header is expected.'
         }, 401)
 
     parts = auth.split()
     if parts[0].lower() != 'bearer':
         raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Authorization header must start with "Bearer".'
+            'success': False,
+            'error': 401,
+            'message': 'invalid_header. Authorization header must start with "Bearer".'
         }, 401)
 
     elif len(parts) == 1:
         raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Token not found.'
+            'success': False,
+            'error': 401,
+            'message': 'invalid_header. Token not found.'
         }, 401)
 
     elif len(parts) > 2:
         raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Authorization header must be bearer token.'
+            'success': False,
+            'error': 401,
+            'message': 'invalid_header. Authorization header must be bearer token.'
         }, 401)
 
     token = parts[1]
@@ -75,12 +79,11 @@ def get_token_auth_header():
     return true otherwise
 '''
 def check_permissions(permission, payload):
-    jwt_permission = payload.split(' ')[1]
-    print(jwt_permission)
-    if permission != jwt_permission:
+    if permission not in payload['permissions']:
         raise AuthError({
-            'code': 'authorization_header_missing',
-            'description': 'Authorization header is expected.'
+            'success': False,
+            'error': 401,
+            'message': 'permission_denied. you do not have permissions'
         }, 401)
 
 '''
@@ -103,8 +106,9 @@ def verify_decode_jwt(token):
     rsa_key = {}
     if 'kid' not in unverified_header:
         raise AuthError({
-            'code': 'invalid_header',
-            'description': 'Authorization malformed.'
+            'success': False,
+            'error': 401,
+            'message': 'invalid_header. Authorization malformed.'
         }, 401)
 
     for key in jwks['keys']:
@@ -130,23 +134,27 @@ def verify_decode_jwt(token):
 
         except jwt.ExpiredSignatureError:
             raise AuthError({
-                'code': 'token_expired',
-                'description': 'Token expired.'
+                'success': False,
+                'error': 401,
+                'message': 'token_expired. Token expired.'
             }, 401)
 
         except jwt.JWTClaimsError:
             raise AuthError({
-                'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'success': False,
+                'error': 401,
+                'message': 'invalid_claims. Incorrect claims. Please, check the audience and issuer.'
             }, 401)
         except Exception:
             raise AuthError({
-                'code': 'invalid_header',
-                'description': 'Unable to parse authentication token.'
+                'success': False,
+                'error': 400,
+                'message': 'invalid_header. Unable to parse authentication token.'
             }, 400)
     raise AuthError({
-                'code': 'invalid_header',
-                'description': 'Unable to find the appropriate key.'
+                'success': False,
+                'error': 400,
+                'message': 'invalid_header. Unable to find the appropriate key.'
             }, 400)
 
 '''
@@ -163,9 +171,12 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            token = get_token_auth_header()
-            payload = verify_decode_jwt(token)
-            check_permissions(permission, payload)
+            try:
+                token = get_token_auth_header()
+                payload = verify_decode_jwt(token)
+                check_permissions(permission, payload)
+            except AuthError as ae:
+                return json.dumps(ae.error), ae.status_code
             return f(payload, *args, **kwargs)
 
         return wrapper

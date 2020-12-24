@@ -14,7 +14,7 @@ setup_db(app)
 Set up CORS. Allow '*' for origins.
 Delete the sample route after completing the TODOs
 '''
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 '''
 Use the after_request decorator to set Access-Control-Allow
@@ -68,7 +68,7 @@ def get_drinks():
 @app.route('/drinks-detail', methods=['GET'])
 @requires_auth('get:drinks-detail')
 @cross_origin()
-def get_drinks_detail():
+def get_drinks_detail(payload):
     drinks = Drink.query.all()
     long_drinks = [drink.long() for drink in drinks]
 
@@ -86,18 +86,19 @@ def get_drinks_detail():
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 @cross_origin()
-def post_drinks():
+def post_drinks(payload):
     
     error = False
     try:
         # get new values
         request_json = request.get_json()
         title = request_json['title']
-        recipe = request_json['recipe']
+        recipe = json.dumps(request_json['recipe'])
 
         # create a new row in the drinks table
         drink = Drink(title=title, recipe=recipe)
         drink.insert()
+        long_drink = drink.long()
     except:
         error = True
         db.session.rollback()
@@ -108,7 +109,7 @@ def post_drinks():
         abort(400)
     else:
         # on successful db insert
-        return jsonify({"success": True, "drinks": drink})
+        return jsonify({"success": True, "drinks": long_drink})
 
     
 
@@ -126,7 +127,7 @@ def post_drinks():
 @app.route('/drinks/<id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 @cross_origin()
-def patch_drinks():
+def patch_drinks(payload, id):
     success = False
     try:
         # get a drink object corresponding to given id
@@ -134,23 +135,28 @@ def patch_drinks():
 
         # get new values
         request_json = request.get_json()
-        title = request_json['title']
-        recipe = request_json['recipe']
+        if 'title' in request_json:
+            # update field values
+            title = request_json['title']
+            drink.title = title
+        
+        if 'recipe' in request_json:
+            # update field values
+            recipe = json.dumps(request_json['recipe'])
+            drink.recipe = recipe
 
-        # update field values
-        drink.title = title
-        drink.recipe = recipe
         drink.update()
 
         # mark success
         success = True
+        long_drink = drink.long()
     except:
         db.session.rollback()
         abort(404) # it should respond with a 404 error if <id> is not found
     finally:
         db.session.close()
 
-    return jsonify({"success": success, "drinks": drink})
+    return jsonify({"success": success, "drinks": [long_drink]})
 
 '''
 @TODO implement endpoint
@@ -165,7 +171,7 @@ def patch_drinks():
 @app.route('/drinks/<id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 @cross_origin()
-def delete_drinks(id):
+def delete_drinks(payload, id):
     success = False
     try:
         drink = Drink.query.get(id)
